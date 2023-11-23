@@ -25,4 +25,6 @@ e os maiores estejam à direira.E agora é implementado as funções "ordenarLis
 CONCLUSÃO
 Em resumo, o código implementa uma TabelaHash com tratamento de colisões usando listas duplamente encadeadas e oferece funcionalidade para manipular e consultar os dados na tabela.Desenvolver o projeto final foi uma experiência bastante complexa, embora tenha trazido mais desafios ao desenvolvimento, acabou ficando com um programa funcional que 
 realizava todas as funções de imprimir os nomes, consultar-los, remove-lôs, e adiciona los manualmente ou atráves de um arquivo de texto e também ser ordenado utiliziando o algoritmo Quicksort, onde todas essas funções podem ser controlados pelo usuário, através de um menu.
+
+
 ![Screenshot_1](https://github.com/adk-coder/Trabalho-Estrutura-De-Dados-TabelaHash/assets/133603450/8dc8d61f-9d6a-414d-b03d-e8568b0c17ea)
