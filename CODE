@@ -1,0 +1,288 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Elemento {
+    char nome[100];
+    struct Elemento* prox;  //ponteiro para o proximo elemento da lista
+    struct Elemento* ant;   //ponteiro para o elemente anterior da lista
+} Elemento;
+
+typedef struct {
+    int tamanho;    //armazena o tamanho da lista
+    Elemento* inicio;   //ponteiro para o primeiro elemento da lista
+} ListaDupla;
+
+typedef struct {
+    int tamanho;
+    ListaDupla* lista;  //ponteiro para um array da listadupla
+} Tabela;
+
+int calcularIndice(char nome[], int tamanho) {
+    int total = 0;
+    for (int i = 0; i < 3 && nome[i] != '\0'; i++) {    //percorre os primeiros 3 caracteres do nome, até encontrar um caracter nulo //"/0" que indica o final da string
+        total += (int)nome[i];                            //Durante o loop, converte cada caractere para o seu valor ASCII (um número inteiro) e adiciona ao total.
+    }
+    return total % tamanho;
+}
+
+void trocarNomes(Elemento* el1, Elemento* el2) { //armazena temporariamente o nome, enquanto ocorre a troca
+    char temp[100];         //"temp" é um array para armazenar temporarimento um nome(elemento)
+    strcpy(temp, el1->nome); //copia o nome "el1" para "temp"
+    strcpy(el1->nome, el2->nome); //"el2" para o "el1"                              //o strycpy esta sendo usado para copiar o conteudo de uma string para outra
+    strcpy(el2->nome, temp); //"temp" que armazena o "el1" para o "el2"
+}
+
+Elemento* dividirLista(Elemento* inicio, Elemento* fim) { //ele rearranjar os elementos na lista de tal forma que todos os elementos menores que o "pivo" estão à esquerda
+    char pivo[100];                                        //e todos os elementos maiores estão à direita.
+    Elemento* i = inicio->ant;
+    Elemento* j;
+
+    strcpy(pivo, fim->nome);    //o pivo contem o nome do ultimo elemento
+
+    for (j = inicio; j != fim; j = j->prox) {   //loop que percorre da posicao "inicio" ate "fim"
+        if (strcmp(j->nome, pivo) < 0) { //tera uma comparacao entre "j" e "pivo", se o nome for menor que o "pivo" sera movido para parte anterior da lista
+            if(i == NULL) { //se o "i" for nulo, ele sera definido por "inicio", caso contrario sera movido para para o "i"
+                i = inicio;
+            } else {
+                i = i->prox;
+            }
+            trocarNomes(i, j);
+        }
+    }
+
+    if(i == NULL) {
+        i = inicio;
+    } else {
+        i = i->prox;
+    }
+    trocarNomes(i, fim);
+
+    return i;
+}
+
+
+void ordenarLista(Elemento* inicio, Elemento* fim) {        //implementacao do Quicksort - divisao e conquista
+    if (fim != NULL && inicio != fim && inicio != fim->prox) {
+        Elemento* pivo = dividirLista(inicio, fim);          //basicamente ela encontra o "pivo", rearranja os elementos na lista
+        ordenarLista(inicio, pivo->ant);                 //menores que o "pivo" estejam a esquerda e os maiores na direita
+        ordenarLista(pivo->prox, fim);                 //o processo é repetido ate que toda lista esteja ordenada
+    }
+}
+
+void ordenarTabela(Tabela* tabela) {                //implementacao do Quicksort - divisao e conquista
+    int i;
+    Elemento* fim;                                   //ponteiro "fim" é usado para encontrar o ultimo elemente de cada lista antes de chamar a funcao "ordenarLista"
+    for (i = 0; i < tabela->tamanho; i++) {
+        fim = tabela->lista[i].inicio;
+        while (fim != NULL && fim->prox != NULL) {
+            fim = fim->prox;
+        }
+
+        ordenarLista(tabela->lista[i].inicio, fim);
+    }
+}
+
+
+
+Tabela* criarTabela(int tamanho) {
+    int i;
+    Tabela* tabela = (Tabela*)malloc(sizeof(Tabela)); //aloca dinamicamente memoria para variael "Tabela"
+    tabela->tamanho = tamanho;
+    tabela->lista = (ListaDupla*)malloc(tamanho * sizeof(ListaDupla));  //aloca a memoria para um array de lista dupla encadeadas
+
+    for (i = 0; i < tamanho; i++) {
+        tabela->lista[i].inicio = NULL;                  //basicamente, cria uma tabela vazia com tamanho especificado
+    }
+
+    return tabela;
+}
+
+
+void inserirNaTabela(Tabela* tabela, char nome[]) {        //basicamente inseri um novo elemento em uma tabela hash  //tratamento de colisao
+    int indice = calcularIndice(nome, tabela->tamanho);
+    Elemento* novoEl = (Elemento*)malloc(sizeof(Elemento));         //Aloca dinamicamente memória para um novo elemento (novoEl) da lista duplamente encadeada.
+
+    strcpy(novoEl->nome, nome);     //Copia o nome fornecido para o campo nome da estrutura do novo elemento.
+    novoEl->prox = tabela->lista[indice].inicio;    //: Configura o ponteiro "prox" do novo elemento para apontar para o início da lista atual no índice calculado
+    novoEl->ant = NULL;     //Configura o ponteiro "ant" do novo elemento como NULL. Isso indica que o novo elemento será o primeiro na lista.
+
+    if (tabela->lista[indice].inicio != NULL) { //Se a lista não estiver vazia, atualiza o ponteiro "ant" //manter a lista dupla encadeada
+        tabela->lista[indice].inicio->ant = novoEl;
+    }
+
+    tabela->lista[indice].inicio = novoEl;
+}
+
+void consultarNaTabela(Tabela* tabela, char nome[]) {       //basicamete verifica um determinado nome na tabela hash
+    int indice = calcularIndice(nome, tabela->tamanho);
+    Elemento* atual = tabela->lista[indice].inicio;
+
+    while (atual != NULL && strcmp(atual->nome, nome) != 0) {   //Percorre a lista encadeada no índice calculado procurando um elemento cujo nome seja igual ao nome fornecido.
+        atual = atual->prox;                                    //O loop continua até que o final da lista seja atingido ou até que o nome seja encontrado.
+    }
+
+    if (atual != NULL) {
+        printf("Nome encontrado na chave %d.\n", indice);       //Essencialmente, esta função fornece uma maneira de verificar se um determinado nome está presente na tabela hash
+    } else {                                                           //e em qual posição (índice) ele foi encontrado, se estiver presente.
+        printf("Nome não encontrado.\n");
+    }
+}
+
+
+void contarElementosPorChave(Tabela* tabela, int chave) {   //conta quantos numeros de elementos tem presentes em uma determinada chave(indice)
+    if (chave < 0 || chave >= tabela->tamanho) {
+        printf("Chave inválida.\n");        //verifica se existe essa chave
+        return;
+    }
+
+    int contador = 0;   //contador de elementos
+    Elemento* atual = tabela->lista[chave].inicio;  //pega a chave fornecida
+    while (atual != NULL) { //percorre a lista ate achar o elemento, dai vira NULL
+        contador++;
+        atual = atual->prox;
+    }
+
+    printf("Quantidade de elementos na chave %d: %d\n", chave, contador);
+}
+
+void removerDaTabela(Tabela* tabela, char nome[]) {     //basicamente removo o elemento especifico da tabela hash
+    int indice = calcularIndice(nome, tabela->tamanho); //calcula o indice(chave) correspondente ao nome fornecido
+    Elemento* atual = tabela->lista[indice].inicio;
+    Elemento* proximo;
+
+    while (atual != NULL && strcmp(atual->nome, nome) != 0) {
+        atual = atual->prox;
+    }
+
+    if (atual != NULL) {
+        if (atual->ant == NULL) {
+            tabela->lista[indice].inicio = atual->prox;
+        } else {
+            atual->ant->prox = atual->prox;
+        }
+        //basicamente ele vai indo prox para prox, e quando achar vira NULL
+        proximo = atual->prox;
+        if (proximo != NULL) {
+            proximo->ant = atual->ant;
+        }
+
+        free(atual);
+        printf("Nome removido da chave %d.\n", indice);
+    } else {
+        printf("Nome não encontrado para remoção.\n");
+    }
+}
+
+
+void exibirTabela(Tabela* tabela) {     //basicamente tem como objetivo mostrar na tela a tabela hash, incluindo as chaves, elementos e um histograma
+    int i, j;
+    Elemento* atual;
+    int contador;
+
+    for (i = 0; i < tabela->tamanho; i++) {     //loop que percorre todas as chaves da tabela hash
+        printf("Chave %d: ", i);    //imprime a chave atual
+        atual = tabela->lista[i].inicio;
+        contador = 0;   //conta o numero de elementos
+
+        while (atual != NULL) { //entra num loop que percorre todos os elementos da lista encadeada
+            printf("%s -> ", atual->nome);  //imprime o nome do elemento
+            contador++; //incrementa o contador
+            atual = atual->prox;
+        }
+
+        printf("NULL"); //final da lista encadeada
+
+        // Adiciona um histograma
+        printf("|");
+        for (j = 0; j < contador; j++) {
+            printf("■");    //imprime um numero de caracteres proporcial ao numero de elementos na chave
+        }
+
+        printf("\n");
+    }
+}
+
+
+void liberarTabela(Tabela* tabela) {    //basicamnete feita para evitar o vazamento da memoria
+    for (int i = 0; i < tabela->tamanho; i++) {     //garante que nao tenha perca de elementos
+        Elemento* atual = tabela->lista[i].inicio;
+        while (atual != NULL) {
+            Elemento* prox = atual->prox;
+            free(atual);
+            atual = prox;
+        }
+    }
+    free(tabela->lista); //libera a memoria alocada para o array de lista
+    free(tabela);   //libera memoria alocada para a estrutura da tabela hash
+}
+
+int main() {
+    int escolha;
+    char nome[100];
+    Tabela* tabela = criarTabela(54); //tabela : TabelaHash
+    FILE* arquivo = fopen("C:\\Users\\augus\\Downloads\\nomes.txt", "r");
+
+    if (arquivo == NULL) {  //verificao da abertura do arquivo se foi bem-sucedido
+        perror("Erro ao abrir o arquivo");
+        return 1;
+    }
+
+    // Ler nomes do arquivo e inserir na tabela
+    while (fscanf(arquivo, "%s", nome) == 1) {
+        inserirNaTabela(tabela, nome);
+    }
+
+    fclose(arquivo);
+
+    do {
+        printf("\n==========  BANCO DE NOMES ==========\n");
+        printf("\nEscolha uma das opcoes abaixo:\n");
+        printf("1 - Inserir nome\n");
+        printf("2 - Consultar nome\n");
+        printf("3 - Contar elementos por chave\n");
+        printf("4 - Remover nome\n");
+        printf("5 - Exibir tabela e histograma\n");
+        printf("6 - Sair\n");
+        printf("Opca"
+               "o: ");
+        scanf("%d", &escolha);
+
+        switch (escolha) {
+            case 1:
+                printf("Digite o nome a ser colocado: ");
+                scanf("%s", nome);
+                inserirNaTabela(tabela, nome);
+                break;
+            case 2:
+                printf("Digite o nome a ser procurado: ");
+                scanf("%s", nome);
+                consultarNaTabela(tabela, nome);
+                break;
+            case 3:
+                printf("Digite a chave para obter a soma de todos os elementos: ");
+                int chave;
+                scanf("%d", &chave);
+                contarElementosPorChave(tabela, chave);
+                break;
+            case 4:
+                printf("Digite o nome a ser removido: ");
+                scanf("%s", nome);
+                removerDaTabela(tabela, nome);
+                break;
+            case 5:
+                ordenarTabela(tabela);
+                exibirTabela(tabela);
+                break;
+            case 6:
+                break;
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+        }
+
+    } while (escolha != 6);
+
+    liberarTabela(tabela);
+
+    return 0;
+}
