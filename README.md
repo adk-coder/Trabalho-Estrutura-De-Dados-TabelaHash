@@ -1,9 +1,9 @@
 # Relatório: Trabalho Final de Estrutura de Dados (Tabela Hash)
 
-INTRODUÇÃO
+# INTRODUÇÃO 
 O problema a ser colocado no trabalho final é criar um "BANCO" de nomes inseridos por um arquivo de texto, na qual o professor @manassesribeiro nos disponibilizou, fazendo listas encadeadas.
 
-OBEJTIVOS
+# OBEJTIVOS
 -Imprementação da Tabela Hash(o código ASCII);
 -Utilização de uma lista encadeada dupla;
 -Manipulação de uma base de dados com mais de 100.000 elementosç
