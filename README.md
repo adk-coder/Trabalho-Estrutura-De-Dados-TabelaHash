@@ -4,14 +4,14 @@
 O problema a ser colocado no trabalho final é criar um "BANCO" de nomes inseridos por um arquivo de texto, na qual o professor @manassesribeiro nos disponibilizou, fazendo listas encadeadas.
 
 # OBEJTIVOS
-. Imprementação da Tabela Hash(o código ASCII);
-. Utilização de uma lista encadeada dupla;
-. Manipulação de uma base de dados com mais de 100.000 elementosç
-. Tratamento de colisão;
-. Consulta;
-. Quantidade de elemetos por chave(53);
-. Eemoção
-. Entre outras.
+* Imprementação da Tabela Hash(o código ASCII);
+* Utilização de uma lista encadeada dupla;
+* Manipulação de uma base de dados com mais de 100.000 elementosç
+* Tratamento de colisão;
+* Consulta;
+* Quantidade de elemetos por chave(53);
+* Eemoção
+* Entre outras.
 
 # RESPOSTA
 Foi utilizado a implementação da Tabela Hash, considerando a letra inical do nome  convertida para inteiro(código ASCII).A tabela deverá possuir 53 chaves, e o tratamento da colisão foi feito por listas encadeadas duplas.
