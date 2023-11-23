@@ -6,11 +6,11 @@ O problema a ser colocado no trabalho final é criar um "BANCO" de nomes inserid
 # OBEJTIVOS
 * Imprementação da Tabela Hash(o código ASCII);
 * Utilização de uma lista encadeada dupla;
-* Manipulação de uma base de dados com mais de 100.000 elementosç
+* Manipulação de uma base de dados com mais de 100.000 elementos;
 * Tratamento de colisão;
 * Consulta;
 * Quantidade de elemetos por chave(53);
-* Eemoção
+* Remoção
 * Entre outras.
 
 # RESPOSTA
