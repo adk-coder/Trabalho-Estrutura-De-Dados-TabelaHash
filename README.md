@@ -28,3 +28,12 @@ realizava todas as funções de imprimir os nomes, consultar-los, remove-lôs, e
 
 
 ![Screenshot_1](https://github.com/adk-coder/Trabalho-Estrutura-De-Dados-TabelaHash/assets/133603450/8dc8d61f-9d6a-414d-b03d-e8568b0c17ea)
+
+# MÉDIA E DESVIO PADRÃO
+
+![image](https://github.com/adk-coder/Trabalho-Estrutura-De-Dados-TabelaHash/assets/133603450/24446e9d-c753-4339-a709-d0e8b13ddbb6)
+
+
+# Análise com histograma
+
+![image](https://github.com/adk-coder/Trabalho-Estrutura-De-Dados-TabelaHash/assets/133603450/98561aa4-a3fb-4e87-82bf-c7e1ae108b17)
